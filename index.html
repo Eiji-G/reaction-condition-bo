@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bayesian reaction optimization for a fixed substrate pair, varying catalyst, base, solvent, and wavelength.">
+  <title>Bayesian Reaction Optimization</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">R<span>.</span></span><span>Reaction Lab <small>Condition Search</small></span></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">BAYESIAN REACTION OPTIMIZATION</p>
+          <h1>Find your next<br><em>best condition.</em></h1>
+          <p class="hero-copy">Keep the substrate pair fixed while exploring catalyst, base, solvent, and wavelength. Record each yield to receive a recommendation for the next untested condition.</p>
+          <div class="hero-tags" aria-label="Optimization parameters"><span>Catalyst</span><span>Base</span><span>Solvent</span><span>Wavelength</span></div>
+        </div>
+      </section>
+
+      <div id="message" role="status" aria-live="polite" hidden></div>
+
+      <div class="layout">
+        <section class="panel setup-panel" aria-labelledby="setup-title">
+          <div class="section-heading"><div><span class="step">01 / SETUP</span><h2 id="setup-title">Search space</h2></div><span id="space-count" class="count">Not set</span></div>
+          <p class="muted">The substrate pair is fixed. Its name is for your records and is not a model variable.</p>
+          <div class="field"><label for="substrate">Substrate pair <span class="optional">optional</span></label><input id="substrate" type="text" placeholder="e.g. Substrate A + Substrate B"></div>
+          <div class="field"><label for="catalysts">Catalyst candidates</label><textarea id="catalysts" rows="4" placeholder="One candidate per line\ne.g. Catalyst A"></textarea></div>
+          <div class="field"><label for="bases">Base candidates</label><textarea id="bases" rows="4" placeholder="One candidate per line\ne.g. Base A"></textarea></div>
+          <div class="field"><label for="solvents">Solvent candidates</label><textarea id="solvents" rows="4" placeholder="One candidate per line\ne.g. Solvent A"></textarea></div>
+          <div class="field"><label for="wavelengthList">Wavelength candidates (nm)</label><textarea id="wavelengthList" rows="4" placeholder="One wavelength per line\ne.g. 365\n405\n450"></textarea></div>
+          <div class="field"><label for="target">Target yield (%)</label><input id="target" type="number" min="0" max="100" step="any" value="80"></div>
+          <button id="save-config" class="button button-dark" type="button">Save search space</button>
+        </section>
+
+        <div class="right-column">
+          <section class="panel suggest-panel" aria-labelledby="suggest-title">
+            <div class="section-heading"><div><span class="step">02 / RECOMMEND</span><h2 id="suggest-title">Next experiment</h2></div><span id="phase" class="phase">Ready</span></div>
+            <p class="muted">The first three experiments cover the search space broadly. After that, a Gaussian process model selects the condition with the highest expected improvement.</p>
+            <button id="suggest" class="button button-accent" type="button">Suggest next condition</button>
+            <div id="recommendation" class="recommendation empty">Add your candidates to see a suggested experiment here.</div>
+          </section>
+
+          <section class="panel record-panel" aria-labelledby="record-title">
+            <div class="section-heading"><div><span class="step">03 / MEASURE</span><h2 id="record-title">Record a yield</h2></div></div>
+            <p class="muted">You can enter results for suggested conditions or experiments you ran earlier.</p>
+            <div class="grid-two"><div class="field"><label for="record-catalyst">Catalyst</label><select id="record-catalyst"></select></div><div class="field"><label for="record-base">Base</label><select id="record-base"></select></div></div>
+            <div class="grid-two"><div class="field"><label for="record-solvent">Solvent</label><select id="record-solvent"></select></div><div class="field"><label for="record-wavelength">Wavelength (nm)</label><select id="record-wavelength"></select></div></div>
+            <div class="grid-two"><div class="field"><label for="record-yield">Yield (%)</label><input id="record-yield" type="number" min="0" max="100" step="any" placeholder="e.g. 67.5"></div><div class="field"><label for="record-note">Note <span class="optional">optional</span></label><input id="record-note" type="text" placeholder="e.g. HPLC assay"></div></div>
+            <button id="record" class="button button-dark" type="button">Add result</button>
+          </section>
+        </div>
+      </div>
+
+      <section class="panel history-panel" aria-labelledby="history-title">
+        <div class="section-heading history-heading"><div><span class="step">04 / REVIEW</span><h2 id="history-title">Experiment history <span id="history-count" class="subcount">0 results</span></h2></div><div class="actions"><button id="export-csv" type="button" class="text-button">Export CSV</button><button id="export-json" type="button" class="text-button">Back up</button><label class="text-button import-label">Restore<input id="import-json" type="file" accept="application/json,.json" hidden></label></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Date</th><th>Catalyst</th><th>Base</th><th>Solvent</th><th>Wavelength</th><th>Yield</th><th>Note</th><th></th></tr></thead><tbody id="history-body"><tr><td colspan="8" class="empty-row">No results yet.</td></tr></tbody></table></div>
+      </section>
+      <p class="footer-note">Experiment data is saved in this browser. Predictions are not measured yields. Check the feasibility and safety of every suggested condition before running it. If you change the search space, results outside it are excluded from recommendations.</p>
+    </main>
+  </div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

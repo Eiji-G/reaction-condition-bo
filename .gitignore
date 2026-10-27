@@ -1,0 +1,5 @@
+.DS_Store
+.openai/
+node_modules/
+reaction-bo-backup*.json
+reaction-bo-results*.csv
